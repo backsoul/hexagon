@@ -2,7 +2,7 @@ package services
 
 import (
 	"github.com/backsoul/hexagon/domain/entities"
-	"github.com/backsoul/hexagon/domain/repositories"
+	"github.com/backsoul/hexagon/infrastructure/repositories"
 )
 
 // UserService proporciona funcionalidades más complejas relacionadas con la gestión de usuarios

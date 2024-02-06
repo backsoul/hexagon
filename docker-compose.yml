@@ -1,11 +1,64 @@
 version: '3'
 
 services:
-  app:
+  pattern:
+    # image: ghcr.io/backsoul/patterns:latest
     build: .
-    ports:
-      - "8080:8080"
     volumes:
       - .:/app
+    networks:
+      - web
+
+  test:
+    image: ghcr.io/backsoul/patterns:latest # Utiliza la misma imagen que tu servicio principal
+    volumes:
+      - .:/app
+    networks:
+      - web
+    command: [ "go", "test", "./..." ] # Ajusta el comando según la ubicación de tus archivos de prueba
+    depends_on:
+      - pattern
+
+  mysql:
+    platform: linux/x86_64
+    image: mysql:8.0.26 # Check for an ARM64-supported version
+    ports:
+      - 3306:3306
     environment:
-      - GO111MODULE=on
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=example
+      - MYSQL_ROOT_USER=user
+      - MYSQL_PASSWORD=password
+    networks:
+      - web
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: mysql
+      UPLOAD_LIMIT: 300M
+      VIRTUAL_HOST: host
+      VIRTUAL_PORT: 80
+      LETSENCRYPT_HOST: host
+      LETSENCRYPT_EMAIL: email
+    networks:
+      - web
+    depends_on:
+      - mysql
+      
+  postgres:
+    image: postgres:13.3
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: example
+    networks:
+      - web
+
+networks:
+  web:
+    external: true

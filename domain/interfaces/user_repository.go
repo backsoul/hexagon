@@ -1,6 +1,6 @@
 // domain/repositories/user_repository.go
 
-package repositories
+package interfaces
 
 import "github.com/backsoul/hexagon/domain/entities"
 

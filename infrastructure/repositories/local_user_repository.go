@@ -8,6 +8,12 @@ import (
 	"github.com/backsoul/hexagon/domain/entities"
 )
 
+// UserRepository define los métodos que deben ser implementados por un repositorio de usuarios
+type UserRepository interface {
+	Store(user *entities.User) error
+	FindByID(id string) (*entities.User, error)
+}
+
 // UserRepositoryImpl implementa UserRepository usando un mapa en memoria
 type UserRepositoryImpl struct {
 	users map[string]*entities.User
